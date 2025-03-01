@@ -1,4 +1,5 @@
 import pygame as pg
+from pygame.math import Vector2
 
 # pg setup
 pg.init()
@@ -86,13 +87,28 @@ while running:
             stopped = True
 
     if(stopped):
-        for led in bounceLed:
-            onLed.append(pg.Vector2(led.x, led.y))
+        lastRowPos: list[float] = []
+        isStacked: bool = False
+        for pos in onLed:
+            if(pos.y == bounceLedStartPos.y + 1 and len(onLed) > 0):
+                lastRowPos.append(pos.x)
+        if(len(lastRowPos) > 0):
+            for pos in bounceLed:
+                if(lastRowPos.count(pos.x) > 0):
+                    onLed.append(pg.Vector2(pos.x, pos.y))
+                    isStacked = True
+        if(len(onLed) == 0):
+            for pos in bounceLed:
+                onLed.append(pg.Vector2(pos.x, pos.y))
+                isStacked = True
+        # for led in bounceLed:
+        #     onLed.append(pg.Vector2(led.x, led.y))
         bounceLedStartPos.y -= 1
         bounceLedStartPos.x = 0
         bounceDirection = 1
-        if(bounceLedStartPos.y < 0):
+        if(bounceLedStartPos.y < 0 or not isStacked):
             running = False
+            continue
 
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("white")
@@ -103,7 +119,6 @@ while running:
     if(frameCount % framesPerMove == 0):
         bounceLeds()        
 
-    print(bounceLedStartPos)
     displayLeds(bounceLed + onLed)
 
     # flip() the display to put your work on screen
