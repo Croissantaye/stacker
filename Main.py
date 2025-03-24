@@ -1,5 +1,4 @@
 import pygame as pg
-from pygame.math import Vector2
 
 # pg setup
 pg.init()
