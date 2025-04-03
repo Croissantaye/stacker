@@ -2,6 +2,7 @@ import pygame as pg
 
 # pg setup
 pg.init()
+pg.font.init()
 
 gridHeight = 15
 gridWidth = 7
@@ -30,6 +31,14 @@ bounceDirection: int = 1
 ledCount: int = 3
 
 screen = pg.display.set_mode((screenWidth, screenHeight))
+prizeFont = pg.font.SysFont('comicsans', 32)
+minorPrize = pg.font.Font.render(prizeFont, "MINOR PRIZE", True, 'blue')
+minorPrizePos = [sidePadding + ((squareSize + squarePadding) * 1.33), topPadding + ((squareSize + squarePadding) * 5.15)]
+majorPrize = pg.font.Font.render(prizeFont, "MAJOR PRIZE", True, 'blue')
+majorPrizePos = [sidePadding + ((squareSize + squarePadding) * 1.33), topPadding + ((squareSize + squarePadding) * 0.15)]
+gameNameFont = pg.font.SysFont('comicsans', 64)
+gameName = pg.font.Font.render(gameNameFont, "STACKER", True, 'black')
+gameNamePos = [sidePadding + ((squareSize + squarePadding) * 0.40), topPadding + ((squareSize + squarePadding) * (gridHeight + 0.5))]
 
 clock = pg.time.Clock()
 
@@ -55,7 +64,7 @@ def displayLeds(leds: list[pg.Vector2]):
     # clear all led squares
     for ledRow in range(len(ledSquares)):
         for ledCol in range(len(ledSquares[0])):
-            color = squareOff 
+            color = squareOff
             pg.draw.rect(screen, color, ledSquares[ledRow][ledCol])
     for pos in leds:
         color = squareOn
@@ -126,6 +135,10 @@ while running:
         bounceLeds()        
 
     displayLeds(bounceLed + onLed)
+
+    screen.blit(minorPrize, minorPrizePos)
+    screen.blit(majorPrize, majorPrizePos)
+    screen.blit(gameName, gameNamePos)
 
     # flip() the display to put your work on screen
     pg.display.flip()
