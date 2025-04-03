@@ -21,7 +21,10 @@ squareOff = 'grey'
 squareOn = 'red'
 
 frameRate = 30
-framesPerMove = 5
+framesPerMove = 1
+speed: list[float] = [6, 3, 2]
+speedChanges: list[float] = [6, 12]
+speedTracker: int = 0
 
 bounceDirection: int = 1
 ledCount: int = 3
@@ -105,6 +108,10 @@ while running:
         bounceLedStartPos.y -= 1
         bounceLedStartPos.x = 0
         bounceDirection = 1
+        # if(speedChanges[speedTracker] == gridHeight - bounceLed[0].y):
+        # if(not speedChanges.index(bounceLed[0].y) == -1):
+        if(speedChanges.count(gridHeight - bounceLed[0].y) == 1):
+            speedTracker += 1
         if(bounceLedStartPos.y < 0 or not isStacked):
             running = False
             continue
@@ -115,7 +122,7 @@ while running:
     # RENDER YOUR GAME HERE
     # set on led from frame count
     frameCount += 1
-    if(frameCount % framesPerMove == 0):
+    if(frameCount % (framesPerMove * speed[speedTracker]) == 0):
         bounceLeds()        
 
     displayLeds(bounceLed + onLed)
