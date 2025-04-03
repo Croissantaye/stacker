@@ -27,6 +27,10 @@ speed: list[float] = [6, 3, 2]
 speedChanges: list[float] = [6, 12]
 speedTracker: int = 0
 
+ledBounceLength: list[int] = [3, 2, 1]
+ledBounceLengthTracker: int = 0
+ledBounceChanges: list[int] = [6, 12]
+
 bounceDirection: int = 1
 ledCount: int = 3
 
@@ -72,13 +76,14 @@ def displayLeds(leds: list[pg.Vector2]):
 
 def bounceLeds():
     global bounceDirection
-    global ledCount
-    hasHitRight: bool = bounceLedStartPos.x + ledCount - 1 == gridWidth and bounceDirection == 1
+    # global ledCount
+    # hasHitRight: bool = bounceLedStartPos.x + ledCount - 1 == gridWidth and bounceDirection == 1
+    hasHitRight: bool = bounceLedStartPos.x + ledBounceLength[ledBounceLengthTracker] - 1 == gridWidth and bounceDirection == 1
     hasHitLeft: bool = bounceLedStartPos.x == -1 and bounceDirection == -1 
     if(hasHitRight or hasHitLeft):
         bounceDirection *= -1
         bounceLedStartPos.x = bounceLed[0].x + bounceDirection
-    for x in range(ledCount):
+    for x in range(ledBounceLength[ledBounceLengthTracker]):
         if(len(bounceLed) < x + 1):
             bounceLed.append(pg.Vector2(bounceLed[x - 1].x + 1, bounceLed[x - 1].y))
         bounceLed[x].x = bounceLedStartPos.x + x
@@ -121,6 +126,8 @@ while running:
         # if(not speedChanges.index(bounceLed[0].y) == -1):
         if(speedChanges.count(gridHeight - bounceLed[0].y) == 1):
             speedTracker += 1
+        if(ledBounceChanges.count(gridHeight - int(bounceLed[0].y)) == 1):
+            ledBounceLengthTracker += 1
         if(bounceLedStartPos.y < 0 or not isStacked):
             running = False
             continue
